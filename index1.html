@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Cuaca Hari Ini</title>
+</head>
+<body>
+    <h1><center>LIVE CUACA HARI INI</center></h1>
+    <input type="text" id="kota" placeholder="Masukkan kota anda">
+    <button id="cek">Cek Cuaca</button>
+    <p id="hasil"></p>
+
+    <script>
+        document.getElementById("cek").addEventListener("click", async () => {
+            const kota = document.getElementById("kota").value.trim();
+            const hasil = document.getElementById("hasil");
+
+            if (!kota) {
+                hasil.textContent = "Masukkan nama kota anda";
+                return;
+            }
+            hasil.textContent = "Mencari cuacanya...";
+
+            try {
+                // Cari koordinat kota
+                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(kota)}`);
+                const geo = await geoRes.json();
+                if (!geo.results || geo.results.length === 0) throw new Error("Kota tidak ditemukan");
+
+                const { latitude, longitude, name, country } = geo.results[0];
+
+                // Ambil data cuaca
+                const cuacaRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                const cuaca = await cuacaRes.json();
+
+                if (!cuaca.current_weather) throw new Error("Data cuaca tidak tersedia");
+
+                hasil.textContent = `Cuaca di ${name}, ${country}: ${cuaca.current_weather.temperature}°C, ${cuaca.current_weather.weathercode === 0 ? 'Cerah' : 'Berawan/Hujan'}`;
+            } catch (err) {
+                hasil.textContent = err.message;
+            }
+        });
+    </script>
+</body>
+</html>

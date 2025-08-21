@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+<body>
+    <h1><center>LIVE CUACA HARI INI</center></h1>
+    <input type="text" placeholder="Masukkan kota anda">
+    <button type="id">Cek Cuaca</button>
+    <p id="hasil"></p>
+
+    <script>
+        document.getElementById("cek").addEventListener("click"),async () => {
+            const kota = document.getElementById("kota").value.trim();
+            const hasil = document.getElementById("hasil");
+
+            if (kota) return out.textcontent ="Masukkan nama kota anda";
+            out.textcontent = "Mencari cuacanya...";
+
+            try{
+                // logika mencari koordionat kota
+                const geo = await fetch(`https://geocoding.apl.mateo.com/v1/seacrh/name=$(kota)`).then(r => r.json());
+                if (!geo.result) throw new Error("Kota tidak ditemukan");
+
+                const ( latitude, longitude ) = geo.resultb[0];
+
+                const cuaca = await fetch (`https://api.open-mateo.com/v1/forecast)
+
+                
+            }
+        }
+    </script>
+</body>
